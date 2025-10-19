@@ -139,7 +139,7 @@ class InstructRequestNormalizer(
                 aggregated_content = self._aggregate_content_chunks(message.content)
                 system_prompt.append(aggregated_content)
 
-        return "\n\n".join(system_prompt) if len(system_prompt) else None
+        return CHUNK_JOIN_STR.join(system_prompt) if len(system_prompt) else None
 
     def _aggregate_tool_messages(self, messages: List[UATS], latest_call_ids: List[str]) -> List[ToolMessageType]:
         r"""
@@ -229,11 +229,11 @@ class InstructRequestNormalizer(
                         text_chunks.append(chunk.text)
                     else:
                         if text_chunks:
-                            all_content.append(TextChunk(text="\n\n".join(text_chunks)))
+                            all_content.append(TextChunk(text=CHUNK_JOIN_STR.join(text_chunks)))
                             text_chunks = []
                         all_content.append(chunk)
 
-        text_content = "\n\n".join(text_chunks) if text_chunks else ""
+        text_content = CHUNK_JOIN_STR.join(text_chunks) if text_chunks else ""
 
         if not all_content:
             # if no ContentChunk was passed, we return content as a str
